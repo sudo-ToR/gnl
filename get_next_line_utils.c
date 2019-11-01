@@ -6,8 +6,22 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:08:47 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/10/29 16:17:12 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/01 14:22:05 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+void	ft_bzero(void *s, size_t n)
+{
+	char	*tmp;
+	size_t	i;
+
+	tmp = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		tmp[i] = 0;
+		i++;
+	}
+}

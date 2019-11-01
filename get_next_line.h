@@ -6,7 +6,7 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:06:26 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/10/29 16:17:58 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/01 14:21:22 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@
 # endif
 
 int		get_next_line(int fd, char **line);
+void	ft_bzero(void *s, size_t n);
 
 #endif

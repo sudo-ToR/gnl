@@ -6,7 +6,7 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:08:54 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/10/30 19:11:38 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/01 19:33:29 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,19 @@ static char		*ft_strdup_line(char *buff, int i)
 
 static int		get_next_line_pt1(char *buff, int *i, int fd, char **line)
 {
-	if (!(*line = ft_strdup_line(&buff[*i], *i)))
+	char *tmp;
+
+	tmp = *line;
+	if (!(*line = ft_strdup_line(buff, *i)))
 		return (-1);
+	free(tmp);
 	while (ft_search_line(&buff[*i], *i) == 0)
 	{
-		if (!(read(fd, buff, BUFFER_SIZE)))
-			return (-1);
+		if(!(read(fd, buff, BUFFER_SIZE)))
+			return (0);
+		tmp = *line;
 		*line = ft_strjoin_line(*line, &buff[*i], *i);
+		free(tmp);
 		*i = 0;
 	}
 	if (ft_search_line(&buff[*i], *i) == 1)
@@ -104,13 +110,12 @@ int				get_next_line(int fd, char **line)
 	int				ret;
 
 	ret = 0;
-	while (i < BUFFER_SIZE && buff[i])
+	while (i < BUFFER_SIZE && ret != 0)
 	{
 		ret = get_next_line_pt1(buff, &i, fd, line);
+		printf("ret = %d\n", ret);
 		if (ret == 1 || ret == -1)
 			return (ret);
-		else
-		printf("%d\n", ret);
 	}
 	while (read(fd, buff, BUFFER_SIZE))
 	{
@@ -120,8 +125,8 @@ int				get_next_line(int fd, char **line)
 		if (ret == 1 || ret == -1)
 			return (ret);
 	}
-	*line = "";
-	printf("IM HERE\n");
+	if (i != 0)
+		*line = "";
 	return (0);
 }
 
@@ -139,7 +144,6 @@ int		main(int argc, char **argv)
 		ret = get_next_line(fd, line);	
 		printf("line = %s\n", line[0]);
 		printf("%d\n", ret);
-		free(line);
 	}
 	close(fd);
 	return (0);

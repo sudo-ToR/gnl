@@ -6,7 +6,7 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:08:54 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/11/01 19:33:29 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/05 21:20:15 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,27 +80,25 @@ static int		get_next_line_pt1(char *buff, int *i, int fd, char **line)
 	char *tmp;
 
 	tmp = *line;
-	if (!(*line = ft_strdup_line(buff, *i)))
+	if (!(*line = ft_strdup_line(&buff[*i], *i)))
 		return (-1);
 	free(tmp);
 	while (ft_search_line(&buff[*i], *i) == 0)
 	{
+		ft_bzero(buff, BUFFER_SIZE);
+		*i = 0;
 		if(!(read(fd, buff, BUFFER_SIZE)))
 			return (0);
 		tmp = *line;
-		*line = ft_strjoin_line(*line, &buff[*i], *i);
+		*line = ft_strjoin_line(*line, buff, *i);
 		free(tmp);
-		*i = 0;
 	}
-	if (ft_search_line(&buff[*i], *i) == 1)
-	{
-		while (*i < BUFFER_SIZE && buff[*i] != '\n')
-			(*i)++;
-		if (*i < BUFFER_SIZE && buff[*i] == '\n')
-			(*i)++;
-		return (1);
-	}
-	return (2);
+	while (*i < BUFFER_SIZE && buff[*i] != '\n')
+		(*i)++;
+	if (*i < BUFFER_SIZE && buff[*i] == '\n')
+		(*i)++;
+	return (1);
+	
 }
 
 int				get_next_line(int fd, char **line)
@@ -109,22 +107,21 @@ int				get_next_line(int fd, char **line)
 	static char		buff[BUFFER_SIZE];
 	int				ret;
 
+	if (BUFFER_SIZE == 0)
+		return (-1);
 	ret = 0;
-	while (i < BUFFER_SIZE && ret != 0)
+	*line = ft_strdup_line("", BUFFER_SIZE + 1);
+	if (i == BUFFER_SIZE)
 	{
-		ret = get_next_line_pt1(buff, &i, fd, line);
-		printf("ret = %d\n", ret);
-		if (ret == 1 || ret == -1)
-			return (ret);
+		ft_bzero(buff, BUFFER_SIZE);
+		i = 0;
 	}
-	while (read(fd, buff, BUFFER_SIZE))
-	{
-		if (i == BUFFER_SIZE)
-			i = 0;
-		ret = get_next_line_pt1(buff, &i, fd, line);
-		if (ret == 1 || ret == -1)
-			return (ret);
-	}
+	if (i < BUFFER_SIZE && buff[i])
+		return (ret = get_next_line_pt1(buff, &i, fd, line));
+	if (read(fd, buff, BUFFER_SIZE))
+		return (ret = get_next_line_pt1(buff, &i, fd, line));
+	else
+		free(*line);
 	if (i != 0)
 		*line = "";
 	return (0);
@@ -134,7 +131,7 @@ int		main(int argc, char **argv)
 {
 	if (argc != 2)
 		return (0);
-	char *line[20];
+	char *line[2];
 	int	fd;
 	int ret = 1;
 	if (!(fd = open(argv[1], O_RDONLY)))
@@ -144,6 +141,7 @@ int		main(int argc, char **argv)
 		ret = get_next_line(fd, line);	
 		printf("line = %s\n", line[0]);
 		printf("%d\n", ret);
+		free(line[1]);
 	}
 	close(fd);
 	return (0);

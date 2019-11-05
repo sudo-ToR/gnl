@@ -6,7 +6,7 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:06:26 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/11/01 14:21:22 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/05 20:41:45 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+
+# if BUFFER_SIZE < 0
+#  undef BUFFER_SIZE
+#  define BUFFER_SIZE 0
+# endif
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 4000

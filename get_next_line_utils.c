@@ -6,11 +6,13 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:08:47 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/11/01 14:22:05 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/05 17:09:31 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+#include<stdio.h>
 
 void	ft_bzero(void *s, size_t n)
 {

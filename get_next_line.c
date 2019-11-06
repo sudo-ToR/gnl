@@ -15,9 +15,9 @@
 #include <string.h>
 #include <fcntl.h>
 
-static int		ft_search_line(char *buff, int i)
+static int		ft_search_line(char *buff, unsigned int i)
 {
-	int j;
+	unsigned int j;
 
 	j = 0;
 	while (j < BUFFER_SIZE - i)
@@ -29,12 +29,12 @@ static int		ft_search_line(char *buff, int i)
 	return (0);
 }
 
-static char		*ft_strjoin_line(char *s1, char *s2, int i)
+static char		*ft_strjoin_line(char *s1, char *s2, unsigned int i)
 {
-	char	*r;
-	int		j;
-	int		len2;
-	int		len1;
+	char			*r;
+	unsigned int	j;
+	unsigned int	len2;
+	unsigned int	len1;
 
 	j = 0;
 	len1 = 0;
@@ -54,11 +54,11 @@ static char		*ft_strjoin_line(char *s1, char *s2, int i)
 	return (r);
 }
 
-static char		*ft_strdup_line(char *buff, int i)
+static char		*ft_strdup_line(char *buff, unsigned int i)
 {
-	char	*str;
-	int		j;
-	int		len;
+	char			*str;
+	unsigned int	j;
+	unsigned int	len;
 
 	j = 0;
 	len = 0;
@@ -75,7 +75,7 @@ static char		*ft_strdup_line(char *buff, int i)
 	return (str);
 }
 
-static int		get_next_line_pt1(char *buff, int *i, int fd, char **line)
+static int		get_next_line_pt1(char *buff, unsigned int *i, int fd, char **line)
 {
 	char *tmp;
 
@@ -103,9 +103,9 @@ static int		get_next_line_pt1(char *buff, int *i, int fd, char **line)
 
 int				get_next_line(int fd, char **line)
 {
-	static int		i = 0;
-	static char		buff[BUFFER_SIZE];
-	int				ret;
+	static unsigned int		i = 0;
+	static char				buff[BUFFER_SIZE];
+	int						ret;
 
 	if (BUFFER_SIZE == 0)
 		return (-1);
@@ -120,10 +120,8 @@ int				get_next_line(int fd, char **line)
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
 	if (read(fd, buff, BUFFER_SIZE))
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
-	else
-		free(*line);
 	if (i != 0)
-		*line = "";
+		*line = ft_strdup_line("", BUFFER_SIZE + 1);
 	return (0);
 }
 
@@ -141,7 +139,7 @@ int		main(int argc, char **argv)
 		ret = get_next_line(fd, line);	
 		printf("line = %s\n", line[0]);
 		printf("%d\n", ret);
-		free(line[1]);
+		free(line[0]);
 	}
 	close(fd);
 	return (0);

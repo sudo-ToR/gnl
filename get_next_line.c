@@ -110,7 +110,7 @@ int				get_next_line(int fd, char **line)
 	if (BUFFER_SIZE == 0)
 		return (-1);
 	ret = 0;
-	*line = ft_strdup_line("", BUFFER_SIZE);
+	*line = ft_strdup_line("", BUFFER_SIZE - 1);
 	if (i == BUFFER_SIZE)
 	{
 		ft_bzero(buff, BUFFER_SIZE);
@@ -118,10 +118,12 @@ int				get_next_line(int fd, char **line)
 	}
 	if (i < BUFFER_SIZE && buff[i])
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
-	if (read(fd, buff, BUFFER_SIZE))
+	if (read(fd, buff, BUFFER_SIZE) < 0) 
+		return (-1);
+	else
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
 	if (i != 0)
-		*line = ft_strdup_line("", BUFFER_SIZE);
+		*line = ft_strdup_line("", BUFFER_SIZE -1);
 	return (0);
 }
 

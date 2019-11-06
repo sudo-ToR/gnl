@@ -119,7 +119,10 @@ int				get_next_line(int fd, char **line)
 	if (i < BUFFER_SIZE && buff[i])
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
 	if (read(fd, buff, BUFFER_SIZE) < 0) 
+	{
+		*line = NULL;
 		return (-1);
+	}
 	else
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
 	if (i != 0)

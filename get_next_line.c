@@ -120,6 +120,7 @@ int				get_next_line(int fd, char **line)
 		return (ret = get_next_line_pt1(buff, &i, fd, line));
 	if (read(fd, buff, BUFFER_SIZE) < 0) 
 	{
+		free (*line);
 		*line = NULL;
 		return (-1);
 	}
@@ -135,7 +136,7 @@ int		main(int argc, char **argv)
 	if (argc != 2)
 		return (0);
 	char *line[2];
-	int	fd;
+	int	fd = 0;
 	int ret = 1;
 	if (!(fd = open(argv[1], O_RDONLY)))
 		return (0);

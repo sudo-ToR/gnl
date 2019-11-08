@@ -6,7 +6,7 @@
 /*   By: lnoirot <lnoirot@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/18 17:08:54 by lnoirot           #+#    #+#             */
-/*   Updated: 2019/11/05 21:20:15 by lnoirot          ###   ########.fr       */
+/*   Updated: 2019/11/08 10:59:27 by lnoirot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char		*ft_strdup_line(char *buff, unsigned int i)
 	return (str);
 }
 
-static int		get_next_line_pt1(char *buff, unsigned int *i, int fd, char **line)
+static int		fill_the_line(char *buff, unsigned int *i, int fd, char **line)
 {
 	char *tmp;
 
@@ -87,7 +87,7 @@ static int		get_next_line_pt1(char *buff, unsigned int *i, int fd, char **line)
 	{
 		ft_bzero(buff, BUFFER_SIZE);
 		*i = 0;
-		if(!(read(fd, buff, BUFFER_SIZE)))
+		if (!(read(fd, buff, BUFFER_SIZE)))
 			return (0);
 		tmp = *line;
 		*line = ft_strjoin_line(*line, buff, *i);
@@ -98,7 +98,6 @@ static int		get_next_line_pt1(char *buff, unsigned int *i, int fd, char **line)
 	if (*i < BUFFER_SIZE && buff[*i] == '\n')
 		(*i)++;
 	return (1);
-	
 }
 
 int				get_next_line(int fd, char **line)
@@ -117,36 +116,12 @@ int				get_next_line(int fd, char **line)
 		i = 0;
 	}
 	if (i < BUFFER_SIZE && buff[i])
-		return (ret = get_next_line_pt1(buff, &i, fd, line));
-	if (read(fd, buff, BUFFER_SIZE) < 0) 
-	{
-		free (*line);
-		*line = NULL;
+		return (ret = fill_the_line(buff, &i, fd, line));
+	if (read(fd, buff, BUFFER_SIZE) < 0)
 		return (-1);
-	}
 	else
-		return (ret = get_next_line_pt1(buff, &i, fd, line));
+		return (ret = fill_the_line(buff, &i, fd, line));
 	if (i != 0)
-		*line = ft_strdup_line("", BUFFER_SIZE -1);
-	return (0);
-}
-
-int		main(int argc, char **argv)
-{
-	if (argc != 2)
-		return (0);
-	char *line[2];
-	int	fd = 0;
-	int ret = 1;
-	if (!(fd = open(argv[1], O_RDONLY)))
-		return (0);
-	while (ret > 0)
-	{
-		ret = get_next_line(fd, line);	
-		printf("line = %s\n", line[0]);
-		printf("%d\n", ret);
-		free(line[0]);
-	}
-	close(fd);
+		*line = ft_strdup_line("", BUFFER_SIZE - 1);
 	return (0);
 }
